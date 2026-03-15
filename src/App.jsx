@@ -6,93 +6,301 @@ import MuseumItem from './MuseumItem'
 import SceneDecor from './SceneDecor'
 import './styles.css'
 
-const CATEGORIES = [
-  {
-    id: 'clothing',
-    title: 'Clothing Hall',
-    subtitle: 'Traditional garments and ceremonial attire',
-    items: [
+const I18N = {
+  kk: {
+    ui: {
+      eyebrow: 'Қазақ мәдени мұрасы',
+      artifactDescription: 'Экспонат сипаттамасы',
+      prevHall: 'Алдыңғы зал',
+      nextHall: 'Келесі зал',
+      soundOn: '♪ Дыбыс қосулы',
+      soundOff: '♪ Дыбыс өшірулі',
+    },
+    categories: [
       {
-        id: 0,
-        path: '/taqiya.glb',
-        name: 'Taqiya',
-        title: 'Taqiya — Traditional Kazakh Headwear',
-        description:
-          'Taqiya is a traditional Kazakh cap decorated with embroidery and ornamental motifs. It reflects aesthetics, daily life and regional identity in Kazakh culture.',
+        id: 'clothing',
+        title: 'Киім залы',
+        subtitle: 'Дәстүрлі киімдер мен салтанатты бас киімдер',
+        items: [
+          {
+            id: 0,
+            path: '/taqiya.glb',
+            name: 'Тақия',
+            title: 'Тақия — дәстүрлі қазақ бас киімі',
+            description:
+              'Тақия — кесте және ою-өрнекпен безендірілетін дәстүрлі қазақ бас киімі. Ол қазақ мәдениетіндегі эстетиканы, күнделікті өмірді және өңірлік ерекшелікті көрсетеді.',
+          },
+          {
+            id: 1,
+            path: '/saukele.glb',
+            name: 'Сәукеле',
+            title: 'Сәукеле — салтанатты қалыңдық бас киімі',
+            description:
+              'Сәукеле — қазақтың үйлену дәстүріндегі ең айшықты бұйымдардың бірі. Ол мәртебені, сұлулықты, отбасылық дәстүрді және рәсімдік қадірді бейнелейді.',
+          },
+          {
+            id: 2,
+            path: '/shapan.glb',
+            name: 'Шапан',
+            title: 'Шапан — салтанатты сырт киім',
+            description:
+              'Шапан — құрметтің, қонақжайлықтың және мерекелік сәннің нышаны. Оның материалы мен оюы қазақ киім мәдениетінің байлығын танытады.',
+          },
+        ],
       },
       {
-        id: 1,
-        path: '/saukele.glb',
-        name: 'Saukele',
-        title: 'Saukele — Ceremonial Bridal Headdress',
-        description:
-          'Saukele is one of the most magnificent elements of Kazakh wedding culture. It symbolizes status, beauty, family tradition and ceremonial dignity.',
+        id: 'music',
+        title: 'Музыка залы',
+        subtitle: 'Ұлы даланың рухани және музыкалық мұрасы',
+        items: [
+          {
+            id: 3,
+            path: '/dombra.glb',
+            name: 'Домбыра',
+            title: 'Домбыра — Ұлы даланың үні',
+            description:
+              'Домбыра — қазақ музыкалық мәдениетінің басты белгілерінің бірі. Күйлер, ауызша тарих және дала жады ұрпақтан ұрпаққа осы аспап арқылы жеткен.',
+          },
+          {
+            id: 4,
+            path: '/qobyz.glb',
+            name: 'Қобыз',
+            title: 'Қобыз — көне киелі аспап',
+            description:
+              'Қобыз — рухани дәстүрмен, эпикалық жыр айтумен және терең әсерлі үнімен байланысты көне ысқылы аспап.',
+          },
+        ],
       },
       {
-        id: 2,
-        path: '/shapan.glb',
-        name: 'Shapan',
-        title: 'Shapan — Ceremonial Outer Garment',
-        description:
-          'Shapan is a traditional outer robe symbolizing honor, hospitality and festive dignity. Its material and ornamentation reveal the richness of Kazakh clothing culture.',
+        id: 'tradition',
+        title: 'Дәстүр залы',
+        subtitle: 'Көшпелі өмір, ұлттық ойындар және күнделікті мұра',
+        items: [
+          {
+            id: 5,
+            path: '/asyq.glb',
+            name: 'Асық',
+            title: 'Асық — дәстүрлі ойын және халық жады',
+            description:
+              'Асық балалар ойынын, ептілікті, жарысты және әлеуметтік қарым-қатынасты бейнелейді. Бұл — халықтық дәстүрдің ең танымал белгілерінің бірі.',
+          },
+          {
+            id: 6,
+            path: '/qamshy.glb',
+            name: 'Қамшы',
+            title: 'Қамшы — дала мәдениетінің дәстүрлі құралы',
+            description:
+              'Қамшы жылқы мәдениетімен, көшпелі өмірмен және дәстүрлі шеберлікпен тығыз байланысты. Ол қозғалысты, сапарды және дала болмысын білдіреді.',
+          },
+          {
+            id: 7,
+            path: '/yurt.glb',
+            name: 'Киіз үй',
+            title: 'Киіз үй — көшпелі үйдің символы',
+            description:
+              'Киіз үй — қазақ өркениетінің ең қуатты нышандарының бірі. Ол отбасыны, қонақжайлықты, мобильділікті және көшпелі өмір құрылымын бейнелейді.',
+          },
+        ],
       },
     ],
   },
-  {
-    id: 'music',
-    title: 'Music Hall',
-    subtitle: 'Spiritual and musical heritage of the Great Steppe',
-    items: [
+
+  ru: {
+    ui: {
+      eyebrow: 'Казахское культурное наследие',
+      artifactDescription: 'Описание экспоната',
+      prevHall: 'Предыдущий зал',
+      nextHall: 'Следующий зал',
+      soundOn: '♪ Звук включён',
+      soundOff: '♪ Звук выключен',
+    },
+    categories: [
       {
-        id: 3,
-        path: '/dombra.glb',
-        name: 'Dombra',
-        title: 'Dombra — Voice of the Great Steppe',
-        description:
-          'Dombra is one of the main symbols of Kazakh musical culture. Through it, kuis, oral history and the memory of the steppe were passed from generation to generation.',
+        id: 'clothing',
+        title: 'Зал одежды',
+        subtitle: 'Традиционные костюмы и церемониальные головные уборы',
+        items: [
+          {
+            id: 0,
+            path: '/taqiya.glb',
+            name: 'Тақия',
+            title: 'Тақия — традиционный казахский головной убор',
+            description:
+              'Тақия — традиционная казахская шапочка, украшенная вышивкой и орнаментом. Она отражает эстетику, повседневную жизнь и региональную идентичность в казахской культуре.',
+          },
+          {
+            id: 1,
+            path: '/saukele.glb',
+            name: 'Сәукеле',
+            title: 'Сәукеле — свадебный церемониальный головной убор',
+            description:
+              'Сәукеле — один из самых величественных элементов казахской свадебной культуры. Он символизирует статус, красоту, семейную традицию и торжественное достоинство.',
+          },
+          {
+            id: 2,
+            path: '/shapan.glb',
+            name: 'Шапан',
+            title: 'Шапан — церемониальная верхняя одежда',
+            description:
+              'Шапан — традиционная верхняя одежда, символизирующая честь, гостеприимство и праздничное достоинство. Материал и орнаментация раскрывают богатство казахской культуры одежды.',
+          },
+        ],
       },
       {
-        id: 4,
-        path: '/qobyz.glb',
-        name: 'Qobyz',
-        title: 'Qobyz — Ancient Sacred Instrument',
-        description:
-          'Qobyz is an ancient bowed instrument associated with spiritual tradition, epic storytelling and deep emotional sound in Kazakh culture.',
+        id: 'music',
+        title: 'Музыкальный зал',
+        subtitle: 'Духовное и музыкальное наследие Великой степи',
+        items: [
+          {
+            id: 3,
+            path: '/dombra.glb',
+            name: 'Домбра',
+            title: 'Домбра — голос Великой степи',
+            description:
+              'Домбра — один из главных символов казахской музыкальной культуры. Через неё передавались кюи, устная история и память степи из поколения в поколение.',
+          },
+          {
+            id: 4,
+            path: '/qobyz.glb',
+            name: 'Қобыз',
+            title: 'Қобыз — древний сакральный инструмент',
+            description:
+              'Қобыз — древний смычковый инструмент, связанный с духовной традицией, эпическим повествованием и глубоким эмоциональным звучанием в казахской культуре.',
+          },
+        ],
+      },
+      {
+        id: 'tradition',
+        title: 'Зал традиций',
+        subtitle: 'Кочевая жизнь, игры и повседневное наследие',
+        items: [
+          {
+            id: 5,
+            path: '/asyq.glb',
+            name: 'Асық',
+            title: 'Асық — традиционная игра и народная память',
+            description:
+              'Асық отражает детские игры, ловкость, соревновательность и социальное взаимодействие. Это один из самых узнаваемых элементов народной традиции.',
+          },
+          {
+            id: 6,
+            path: '/qamshy.glb',
+            name: 'Қамшы',
+            title: 'Қамшы — традиционная плеть степной культуры',
+            description:
+              'Қамшы тесно связан с конной культурой, кочевой жизнью и традиционными навыками. Он символизирует движение, путь и степную идентичность.',
+          },
+          {
+            id: 7,
+            path: '/yurt.glb',
+            name: 'Юрта',
+            title: 'Юрта — символ кочевого дома',
+            description:
+              'Юрта — один из самых сильных символов казахской цивилизации. Она олицетворяет семью, гостеприимство, мобильность и устройство кочевой жизни.',
+          },
+        ],
       },
     ],
   },
-  {
-    id: 'tradition',
-    title: 'Tradition Hall',
-    subtitle: 'Nomadic life, games and everyday heritage',
-    items: [
+
+  en: {
+    ui: {
+      eyebrow: 'Kazakh Cultural Heritage',
+      artifactDescription: 'Artifact Description',
+      prevHall: 'Previous Hall',
+      nextHall: 'Next Hall',
+      soundOn: '♪ Sound On',
+      soundOff: '♪ Sound Off',
+    },
+    categories: [
       {
-        id: 5,
-        path: '/asyq.glb',
-        name: 'Asyq',
-        title: 'Asyq — Traditional Game and Folk Memory',
-        description:
-          'Asyq reflects children’s games, dexterity, competition and social interaction. It is one of the most recognizable elements of folk tradition.',
+        id: 'clothing',
+        title: 'Clothing Hall',
+        subtitle: 'Traditional garments and ceremonial attire',
+        items: [
+          {
+            id: 0,
+            path: '/taqiya.glb',
+            name: 'Taqiya',
+            title: 'Taqiya — Traditional Kazakh Headwear',
+            description:
+              'Taqiya is a traditional Kazakh cap decorated with embroidery and ornamental motifs. It reflects aesthetics, daily life, and regional identity in Kazakh culture.',
+          },
+          {
+            id: 1,
+            path: '/saukele.glb',
+            name: 'Saukele',
+            title: 'Saukele — Ceremonial Bridal Headdress',
+            description:
+              'Saukele is one of the most magnificent elements of Kazakh wedding culture. It symbolizes status, beauty, family tradition, and ceremonial dignity.',
+          },
+          {
+            id: 2,
+            path: '/shapan.glb',
+            name: 'Shapan',
+            title: 'Shapan — Ceremonial Outer Garment',
+            description:
+              'Shapan is a traditional outer robe symbolizing honor, hospitality, and festive dignity. Its material and ornamentation reveal the richness of Kazakh clothing culture.',
+          },
+        ],
       },
       {
-        id: 6,
-        path: '/qamshy.glb',
-        name: 'Qamshy',
-        title: 'Qamshy — Traditional Whip of Steppe Culture',
-        description:
-          'Qamshy is closely connected with horse culture, nomadic life and traditional skills. It represents movement, travel and степpe identity.',
+        id: 'music',
+        title: 'Music Hall',
+        subtitle: 'Spiritual and musical heritage of the Great Steppe',
+        items: [
+          {
+            id: 3,
+            path: '/dombra.glb',
+            name: 'Dombra',
+            title: 'Dombra — Voice of the Great Steppe',
+            description:
+              'Dombra is one of the main symbols of Kazakh musical culture. Through it, kuis, oral history, and the memory of the steppe were passed from generation to generation.',
+          },
+          {
+            id: 4,
+            path: '/qobyz.glb',
+            name: 'Qobyz',
+            title: 'Qobyz — Ancient Sacred Instrument',
+            description:
+              'Qobyz is an ancient bowed instrument associated with spiritual tradition, epic storytelling, and deep emotional sound in Kazakh culture.',
+          },
+        ],
       },
       {
-        id: 7,
-        path: '/yurt.glb',
-        name: 'Yurt',
-        title: 'Yurt — Symbol of Nomadic Home',
-        description:
-          'Yurt is one of the strongest symbols of Kazakh civilization. It represents family, hospitality, mobility and the structure of nomadic life.',
+        id: 'tradition',
+        title: 'Tradition Hall',
+        subtitle: 'Nomadic life, games, and everyday heritage',
+        items: [
+          {
+            id: 5,
+            path: '/asyq.glb',
+            name: 'Asyq',
+            title: 'Asyq — Traditional Game and Folk Memory',
+            description:
+              'Asyq reflects children’s games, dexterity, competition, and social interaction. It is one of the most recognizable elements of folk tradition.',
+          },
+          {
+            id: 6,
+            path: '/qamshy.glb',
+            name: 'Qamshy',
+            title: 'Qamshy — Traditional Whip of Steppe Culture',
+            description:
+              'Qamshy is closely connected with horse culture, nomadic life, and traditional skills. It represents movement, travel, and steppe identity.',
+          },
+          {
+            id: 7,
+            path: '/yurt.glb',
+            name: 'Yurt',
+            title: 'Yurt — Symbol of Nomadic Home',
+            description:
+              'Yurt is one of the strongest symbols of Kazakh civilization. It represents family, hospitality, mobility, and the structure of nomadic life.',
+          },
+        ],
       },
     ],
   },
-]
+}
 
 function FloatingDust() {
   const ref = useRef()
@@ -225,6 +433,8 @@ function Scene({
   const activeSpotRef = useRef()
   const activeSpotTargetRef = useRef()
 
+  const activeSlotX = activeId !== null ? layout[activeId]?.modelPosition?.[0] ?? null : null
+
   useEffect(() => {
     if (activeSpotRef.current && activeSpotTargetRef.current) {
       activeSpotRef.current.target = activeSpotTargetRef.current
@@ -298,6 +508,7 @@ function Scene({
             setActiveId={setActiveId}
             slot={slot}
             total={category.items.length}
+            activeSlotX={activeSlotX}
           />
         )
       })}
@@ -321,6 +532,7 @@ function Scene({
 }
 
 export default function App() {
+  const [language, setLanguage] = useState('ru')
   const [categoryIndex, setCategoryIndex] = useState(0)
   const [activeId, setActiveId] = useState(null)
   const [audioEnabled, setAudioEnabled] = useState(false)
@@ -329,12 +541,13 @@ export default function App() {
   const audioRef = useRef(null)
   const transitionLockRef = useRef(false)
 
-  const activeCategory = CATEGORIES[categoryIndex]
+  const dictionary = I18N[language]
+  const activeCategory = dictionary.categories[categoryIndex]
   const activeItem = activeCategory.items.find((i) => i.id === activeId) || null
 
   useEffect(() => {
     setActiveId(null)
-  }, [categoryIndex])
+  }, [categoryIndex, language])
 
   useEffect(() => {
     const unlockAudio = async () => {
@@ -397,11 +610,11 @@ export default function App() {
   }
 
   const goPrev = () => {
-    changeCategorySmooth((categoryIndex - 1 + CATEGORIES.length) % CATEGORIES.length)
+    changeCategorySmooth((categoryIndex - 1 + dictionary.categories.length) % dictionary.categories.length)
   }
 
   const goNext = () => {
-    changeCategorySmooth((categoryIndex + 1) % CATEGORIES.length)
+    changeCategorySmooth((categoryIndex + 1) % dictionary.categories.length)
   }
 
   const infoCardClass = [
@@ -444,24 +657,45 @@ export default function App() {
         </Suspense>
       </Canvas>
 
+      <div className="languageSwitcher">
+        <button
+          className={language === 'kk' ? 'active' : ''}
+          onClick={() => setLanguage('kk')}
+        >
+          Қазақша
+        </button>
+        <button
+          className={language === 'ru' ? 'active' : ''}
+          onClick={() => setLanguage('ru')}
+        >
+          Рус
+        </button>
+        <button
+          className={language === 'en' ? 'active' : ''}
+          onClick={() => setLanguage('en')}
+        >
+          Eng
+        </button>
+      </div>
+
       <div className={topBarClass}>
-        <div className="topBarEyebrow">Kazakh Cultural Heritage</div>
+        <div className="topBarEyebrow">{dictionary.ui.eyebrow}</div>
         <div className="topBarTitle">{activeCategory.title}</div>
         <div className="topBarSubtitle">{activeCategory.subtitle}</div>
       </div>
 
-      <button className="sideArrow sideArrowLeft" onClick={goPrev} aria-label="Previous Hall">
+      <button className="sideArrow sideArrowLeft" onClick={goPrev} aria-label={dictionary.ui.prevHall}>
         <span>‹</span>
       </button>
 
-      <button className="sideArrow sideArrowRight" onClick={goNext} aria-label="Next Hall">
+      <button className="sideArrow sideArrowRight" onClick={goNext} aria-label={dictionary.ui.nextHall}>
         <span>›</span>
       </button>
 
       <div className={infoCardClass}>
         {activeItem && (
           <>
-            <div className="infoPanelCategory">Artifact Description</div>
+            <div className="infoPanelCategory">{dictionary.ui.artifactDescription}</div>
             <div className="infoPanelTitle">{activeItem.title}</div>
             <div className="infoPanelText">{activeItem.description}</div>
           </>
@@ -472,7 +706,7 @@ export default function App() {
         className={`soundButton overlaySound ${audioEnabled ? 'active' : ''}`}
         onClick={toggleAudio}
       >
-        {audioEnabled ? '♪ Sound On' : '♪ Sound Off'}
+        {audioEnabled ? dictionary.ui.soundOn : dictionary.ui.soundOff}
       </button>
     </div>
   )

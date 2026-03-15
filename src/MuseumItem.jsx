@@ -169,6 +169,7 @@ export default function MuseumItem({
   setActiveId,
   slot,
   total,
+  activeSlotX,
 }) {
   const { scene } = useGLTF(item.path)
   const ref = useRef()
@@ -208,13 +209,26 @@ export default function MuseumItem({
         slot.modelScale * config.baseScaleMultiplier * config.activeScaleMultiplier
       targetRotY = config.baseRotationY
     } else if (hasActive) {
-      const sideX = slot.modelPosition[0] < 0 ? -4.8 : slot.modelPosition[0] > 0 ? 4.8 : 0
-      const sideZ = slot.modelPosition[0] === 0 ? -1.35 : -0.85
+      const slotX = slot.modelPosition[0]
+      const isCenterItem = Math.abs(slotX) < 0.01
+      const activeIsEdge = total === 3 && activeSlotX !== null && Math.abs(activeSlotX) > 0.01
+
+      let sideX = slotX < 0 ? -4.8 : slotX > 0 ? 4.8 : 0
+      let sideZ = slotX === 0 ? -1.35 : -0.85
+      let rotY = slotX < 0 ? 0.22 : slotX > 0 ? -0.22 : 0
+
+      // Если в зале 3 элемента и выбран крайний,
+      // центральный экспонат занимает место выбранного крайнего.
+      if (activeIsEdge && isCenterItem) {
+        sideX = activeSlotX < 0 ? -4.8 : 4.8
+        sideZ = -0.85
+        rotY = activeSlotX < 0 ? 0.22 : -0.22
+      }
 
       targetPos = new THREE.Vector3(sideX, config.sideYOffset, sideZ)
       targetScale =
         slot.modelScale * config.baseScaleMultiplier * config.sideScaleMultiplier
-      targetRotY = slot.modelPosition[0] < 0 ? 0.22 : slot.modelPosition[0] > 0 ? -0.22 : 0
+      targetRotY = rotY
     } else {
       targetPos = new THREE.Vector3(
         slot.modelPosition[0],
