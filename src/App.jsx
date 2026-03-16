@@ -576,44 +576,46 @@ function Scene({
 
   return (
     <group ref={sceneRootRef}>
-      <fog attach="fog" args={['#120907', 11, 28]} />
+<fog attach="fog" args={['#120907', 14, 34]} />
 
-      <ambientLight intensity={0.56} />
-      <hemisphereLight args={['#f0d3a0', '#14090d', 0.8]} />
+<ambientLight intensity={1.0} />
+<hemisphereLight args={['#f3d6a2', '#1a0d0b', 1.15]} />
 
-      <directionalLight
-        position={[6, 9, 6]}
-        intensity={1.15}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-      />
+<directionalLight
+  position={[5, 8, 6]}
+  intensity={1.6}
+  castShadow
+  shadow-mapSize-width={1024}
+  shadow-mapSize-height={1024}
+/>
 
-      <spotLight
-        position={[0, 7.0, 2.2]}
-        intensity={1.22}
-        angle={0.34}
-        penumbra={0.95}
-        color="#ffe2a8"
-      />
+<spotLight
+  position={[0, 7.2, 3.4]}
+  intensity={2.2}
+  angle={0.42}
+  penumbra={0.95}
+  distance={24}
+  decay={1.5}
+  color="#ffe0a8"
+/>
 
-      <spotLight
-        ref={activeSpotRef}
-        position={[0, 6.1, 3.15]}
-        intensity={activeId !== null ? 2.2 : 0.55}
-        angle={0.27}
-        penumbra={1}
-        distance={18}
-        decay={1.8}
-        color="#fff8ed"
-        castShadow
-      />
-      <object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
+<spotLight
+  ref={activeSpotRef}
+  position={[0, 6.2, 3.4]}
+  intensity={activeId !== null ? 2.8 : 1.15}
+  angle={0.32}
+  penumbra={1}
+  distance={20}
+  decay={1.6}
+  color="#fff4de"
+  castShadow
+/>
 
-      <pointLight position={[-6, 2.8, 1]} intensity={0.16} color="#7f53cf" />
-      <pointLight position={[6, 2.8, 1]} intensity={0.16} color="#b97931" />
-      <pointLight position={[0, 3.2, -2]} intensity={0.24} color="#f8c66c" />
+<object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
 
+<pointLight position={[-5.5, 3.6, 2]} intensity={0.7} color="#7f53cf" />
+<pointLight position={[5.5, 3.6, 2]} intensity={0.85} color="#c98532" />
+<pointLight position={[0, 3.8, -1.6]} intensity={0.8} color="#f4c56f" />
       <SceneDecor />
       <FloatingDust />
 
@@ -634,7 +636,6 @@ function Scene({
         )
       })}
 
-      <Environment preset="warehouse" />
       <CameraRig
         activeId={activeId}
         categoryIndex={categoryIndex}
