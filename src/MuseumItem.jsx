@@ -198,6 +198,8 @@ function normalizeModel(scene, targetSize = 1) {
   return cloned
 }
 
+
+
 export default function MuseumItem({
   item,
   index,
