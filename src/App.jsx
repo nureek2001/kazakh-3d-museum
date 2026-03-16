@@ -1,12 +1,11 @@
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, OrbitControls } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 import MuseumItem from './MuseumItem'
 import SceneDecor from './SceneDecor'
 import './styles.css'
 import { translateText } from './translateService'
-
 
 const I18N = {
   kk: {
@@ -376,9 +375,6 @@ const I18N = {
   },
 }
 
-// Укажите пути к файлам озвучки для каждого экспоната по его id.
-// Пример: id 0 (Тақия), 1 (Сәукеле) и т.д.
-// Сохраните аудио‑файлы, например, в папку /public/audio и пропишите здесь пути.
 export const EXHIBIT_AUDIO_SOURCES = {
   kk: {
     0: '/audio/kz/taqiya.mp3',
@@ -576,46 +572,47 @@ function Scene({
 
   return (
     <group ref={sceneRootRef}>
-<fog attach="fog" args={['#120907', 14, 34]} />
+      <fog attach="fog" args={['#120907', 14, 34]} />
 
-<ambientLight intensity={1.0} />
-<hemisphereLight args={['#f3d6a2', '#1a0d0b', 1.15]} />
+      <ambientLight intensity={1.0} />
+      <hemisphereLight args={['#f3d6a2', '#1a0d0b', 1.15]} />
 
-<directionalLight
-  position={[5, 8, 6]}
-  intensity={1.6}
-  castShadow
-  shadow-mapSize-width={1024}
-  shadow-mapSize-height={1024}
-/>
+      <directionalLight
+        position={[5, 8, 6]}
+        intensity={1.6}
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+      />
 
-<spotLight
-  position={[0, 7.2, 3.4]}
-  intensity={2.2}
-  angle={0.42}
-  penumbra={0.95}
-  distance={24}
-  decay={1.5}
-  color="#ffe0a8"
-/>
+      <spotLight
+        position={[0, 7.2, 3.4]}
+        intensity={2.2}
+        angle={0.42}
+        penumbra={0.95}
+        distance={24}
+        decay={1.5}
+        color="#ffe0a8"
+      />
 
-<spotLight
-  ref={activeSpotRef}
-  position={[0, 6.2, 3.4]}
-  intensity={activeId !== null ? 2.8 : 1.15}
-  angle={0.32}
-  penumbra={1}
-  distance={20}
-  decay={1.6}
-  color="#fff4de"
-  castShadow
-/>
+      <spotLight
+        ref={activeSpotRef}
+        position={[0, 6.2, 3.4]}
+        intensity={activeId !== null ? 2.8 : 1.15}
+        angle={0.32}
+        penumbra={1}
+        distance={20}
+        decay={1.6}
+        color="#fff4de"
+        castShadow
+      />
 
-<object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
+      <object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
 
-<pointLight position={[-5.5, 3.6, 2]} intensity={0.7} color="#7f53cf" />
-<pointLight position={[5.5, 3.6, 2]} intensity={0.85} color="#c98532" />
-<pointLight position={[0, 3.8, -1.6]} intensity={0.8} color="#f4c56f" />
+      <pointLight position={[-5.5, 3.6, 2]} intensity={0.7} color="#7f53cf" />
+      <pointLight position={[5.5, 3.6, 2]} intensity={0.85} color="#c98532" />
+      <pointLight position={[0, 3.8, -1.6]} intensity={0.8} color="#f4c56f" />
+
       <SceneDecor />
       <FloatingDust />
 
@@ -676,8 +673,6 @@ export default function App() {
     setLanguage(nextLanguage)
     setActiveId(null)
 
-    // Автоматический перевод "eyebrow" с казахского как базового текста.
-    // Остальные строки пока берутся из статического словаря I18N.
     if (nextLanguage === 'kk') return
     if (translatedEyebrowByLang[nextLanguage]) return
 
@@ -701,7 +696,7 @@ export default function App() {
     const unlockAudio = async () => {
       if (!audioRef.current) return
       try {
-        audioRef.current.volume = 0.34
+        audioRef.current.volume = 0.03
         await audioRef.current.play()
         setAudioEnabled(true)
       } catch (error) {
@@ -726,6 +721,7 @@ export default function App() {
       setAudioEnabled(false)
     } else {
       try {
+        audioRef.current.volume = 0.03
         await audioRef.current.play()
         setAudioEnabled(true)
       } catch (error) {
@@ -758,7 +754,10 @@ export default function App() {
   }
 
   const goPrev = () => {
-    changeCategorySmooth((categoryIndex - 1 + dictionary.categories.length) % dictionary.categories.length)
+    changeCategorySmooth(
+      (categoryIndex - 1 + dictionary.categories.length) %
+        dictionary.categories.length
+    )
   }
 
   const goNext = () => {
@@ -785,7 +784,7 @@ export default function App() {
       <div className="bottomFade" />
 
       <audio ref={audioRef} loop preload="auto">
-        <source src="/kui.mp3" type="audio/mpeg" />
+        <source src="/kui2.mp3" type="audio/mpeg" />
       </audio>
 
       <Canvas
@@ -829,18 +828,28 @@ export default function App() {
         <div className="topBarSubtitle">{activeCategory.subtitle}</div>
       </div>
 
-      <button className="sideArrow sideArrowLeft" onClick={goPrev} aria-label={dictionary.ui.prevHall}>
+      <button
+        className="sideArrow sideArrowLeft"
+        onClick={goPrev}
+        aria-label={dictionary.ui.prevHall}
+      >
         <span>‹</span>
       </button>
 
-      <button className="sideArrow sideArrowRight" onClick={goNext} aria-label={dictionary.ui.nextHall}>
+      <button
+        className="sideArrow sideArrowRight"
+        onClick={goNext}
+        aria-label={dictionary.ui.nextHall}
+      >
         <span>›</span>
       </button>
 
       <div className={infoCardClass}>
         {activeItem && (
           <>
-            <div className="infoPanelCategory">{dictionary.ui.artifactDescription}</div>
+            <div className="infoPanelCategory">
+              {dictionary.ui.artifactDescription}
+            </div>
             <div className="infoPanelTitle">{activeItem.title}</div>
             <div className="infoPanelText">{activeItem.description}</div>
           </>
@@ -853,6 +862,13 @@ export default function App() {
       >
         {audioEnabled ? dictionary.ui.soundOn : dictionary.ui.soundOff}
       </button>
+
+      <div className="universityFooter">
+        <img src="/logo.png" alt="AOGU" className="universityFooterLogo" />
+        <div className="universityFooterText">
+          ATYRAU OIL AND GAS UNIVERSITY
+        </div>
+      </div>
     </div>
   )
 }

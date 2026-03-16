@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Html, useGLTF } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -212,10 +212,14 @@ export default function MuseumItem({
   const ref = useRef()
   const audioRef = useRef(null)
   const playTimeoutRef = useRef(null)
+  const dragRef = useRef({
+    isDragging: false,
+    lastX: 0,
+  })
+  const activeRotationYRef = useRef(0)
+  const spinVelocityRef = useRef(0)
   const [isPlaying, setIsPlaying] = useState(false)
 
-  // Измените это значение, чтобы поменять задержку
-  // перед началом озвучки при клике по экспонату (в миллисекундах).
   const PLAY_DELAY_MS = 2000
 
   const config = MODEL_CONFIG[item.path] || {
@@ -240,69 +244,83 @@ export default function MuseumItem({
 
   useEffect(() => {
     if (!audioSrc) return
+
     const audio = new Audio(audioSrc)
-    // Начинаем с нулевой громкости, чтобы можно было "задержать" слышимый звук
-    // и при этом удовлетворить требование браузера о пользовательском взаимодействии.
-    audio.volume = 0
-    audio.currentTime = 0 
+    audio.preload = 'auto'
+    audio.volume = 1
+    audio.currentTime = 0
     audioRef.current = audio
 
     return () => {
       if (playTimeoutRef.current) {
         clearTimeout(playTimeoutRef.current)
+        playTimeoutRef.current = null
       }
+
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.currentTime = 0
-        audioRef.current.src = ""   // полностью освобождаем аудио
-      audioRef.current = null
+        audioRef.current.src = ''
+        audioRef.current = null
       }
     }
   }, [audioSrc])
 
-  // Останавливаем озвучку, если экспонат перестал быть активным
+  useEffect(() => {
+    const handlePointerUp = () => {
+      dragRef.current.isDragging = false
+    }
+
+    window.addEventListener('pointerup', handlePointerUp)
+    return () => window.removeEventListener('pointerup', handlePointerUp)
+  }, [])
+
   useEffect(() => {
     if (!audioRef.current) return
-    if (!isActive && isPlaying) {
+
+    if (!isActive) {
+      if (playTimeoutRef.current) {
+        clearTimeout(playTimeoutRef.current)
+        playTimeoutRef.current = null
+      }
+
       audioRef.current.pause()
       audioRef.current.currentTime = 0
       setIsPlaying(false)
-      if (playTimeoutRef.current) {
-        clearTimeout(playTimeoutRef.current)
-      }
+      dragRef.current.isDragging = false
+      spinVelocityRef.current = 0
     }
-  }, [isActive, isPlaying])
+  }, [isActive])
 
-const toggleExhibitAudio = () => {
-  if (!audioRef.current || !audioSrc) return
+  const toggleExhibitAudio = () => {
+    if (!audioRef.current || !audioSrc) return
 
-  // очищаем старый таймер
-  if (playTimeoutRef.current) {
-    clearTimeout(playTimeoutRef.current)
-    playTimeoutRef.current = null
-  }
+    if (playTimeoutRef.current) {
+      clearTimeout(playTimeoutRef.current)
+      playTimeoutRef.current = null
+    }
 
-  // полностью останавливаем звук
-  audioRef.current.pause()
-  audioRef.current.currentTime = 0
-  audioRef.current.volume = 0
+    audioRef.current.pause()
+    audioRef.current.currentTime = 0
+    setIsPlaying(false)
     setActiveId(item.id)
 
-  audioRef.current
-    .play()
-    .then(() => {
-      setIsPlaying(true)
+    playTimeoutRef.current = setTimeout(() => {
+      if (!audioRef.current) return
 
-      playTimeoutRef.current = setTimeout(() => {
-        if (!audioRef.current) return
-        audioRef.current.currentTime = 0   // дополнительная защита
-        audioRef.current.volume = 1
-      }, PLAY_DELAY_MS)
-    })
-    .catch(() => {
-      setIsPlaying(false)
-    })
-}
+      audioRef.current.currentTime = 0
+      audioRef.current.volume = 1
+
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true)
+        })
+        .catch(() => {
+          setIsPlaying(false)
+        })
+    }, PLAY_DELAY_MS)
+  }
 
   useFrame((state) => {
     if (!ref.current || !slot) return
@@ -327,8 +345,6 @@ const toggleExhibitAudio = () => {
       let sideZ = slotX === 0 ? -1.35 : -0.85
       let rotY = slotX < 0 ? 0.22 : slotX > 0 ? -0.22 : 0
 
-      // Если в зале 3 элемента и выбран крайний,
-      // центральный экспонат занимает место выбранного крайнего.
       if (activeIsEdge && isCenterItem) {
         sideX = activeSlotX < 0 ? -4.8 : 4.8
         sideZ = -0.85
@@ -362,7 +378,17 @@ const toggleExhibitAudio = () => {
     ref.current.position.y += (targetPos.y + floatOffset - ref.current.position.y) * 0.08
 
     if (isActive) {
-      ref.current.rotation.y += 0.01
+      activeRotationYRef.current += 0.01 + spinVelocityRef.current
+      spinVelocityRef.current *= 0.94
+
+      const targetActiveY = config.baseRotationY + activeRotationYRef.current
+
+      ref.current.rotation.y = THREE.MathUtils.lerp(
+        ref.current.rotation.y,
+        targetActiveY,
+        0.18
+      )
+
       ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, 0.018, 0.08)
     } else {
       ref.current.rotation.y = THREE.MathUtils.lerp(
@@ -386,7 +412,7 @@ const toggleExhibitAudio = () => {
         if ('emissiveIntensity' in obj.material) {
           obj.material.emissiveIntensity = THREE.MathUtils.lerp(
             obj.material.emissiveIntensity ?? 0,
-            isActive ? 0.06 : 0,
+            isActive ? 0.08 : 0,
             0.08
           )
         }
@@ -409,10 +435,29 @@ const toggleExhibitAudio = () => {
         e.stopPropagation()
         toggleExhibitAudio()
       }}
+      onPointerDown={(e) => {
+        if (!isActive) return
+        e.stopPropagation()
+        dragRef.current.isDragging = true
+        dragRef.current.lastX = e.clientX
+      }}
+      onPointerMove={(e) => {
+        if (!isActive || !dragRef.current.isDragging) return
+        e.stopPropagation()
+
+        const deltaX = e.clientX - dragRef.current.lastX
+        dragRef.current.lastX = e.clientX
+
+        activeRotationYRef.current += deltaX * 0.015
+        spinVelocityRef.current = deltaX * 0.0014
+      }}
+      onPointerUp={(e) => {
+        if (!isActive) return
+        e.stopPropagation()
+        dragRef.current.isDragging = false
+      }}
     >
       <primitive object={normalizedScene} />
-
-
     </group>
   )
 }
