@@ -292,35 +292,34 @@ export default function MuseumItem({
     }
   }, [isActive])
 
-  const toggleExhibitAudio = () => {
-    if (!audioRef.current || !audioSrc) return
+const playExhibitAudio = () => {
+  if (!audioRef.current || !audioSrc) return
 
-    if (playTimeoutRef.current) {
-      clearTimeout(playTimeoutRef.current)
-      playTimeoutRef.current = null
-    }
-
-    audioRef.current.pause()
-    audioRef.current.currentTime = 0
-    setIsPlaying(false)
-    setActiveId(item.id)
-
-    playTimeoutRef.current = setTimeout(() => {
-      if (!audioRef.current) return
-
-      audioRef.current.currentTime = 0
-      audioRef.current.volume = 1
-
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true)
-        })
-        .catch(() => {
-          setIsPlaying(false)
-        })
-    }, PLAY_DELAY_MS)
+  if (playTimeoutRef.current) {
+    clearTimeout(playTimeoutRef.current)
+    playTimeoutRef.current = null
   }
+
+  audioRef.current.pause()
+  audioRef.current.currentTime = 0
+  setIsPlaying(false)
+
+  playTimeoutRef.current = setTimeout(() => {
+    if (!audioRef.current) return
+
+    audioRef.current.currentTime = 0
+    audioRef.current.volume = 1
+
+    audioRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true)
+      })
+      .catch(() => {
+        setIsPlaying(false)
+      })
+  }, PLAY_DELAY_MS)
+}
 
   useFrame((state) => {
     if (!ref.current || !slot) return
@@ -431,10 +430,14 @@ export default function MuseumItem({
         slot.modelPosition[2],
       ]}
       scale={[slot.modelScale, slot.modelScale, slot.modelScale]}
-      onClick={(e) => {
-        e.stopPropagation()
-        toggleExhibitAudio()
-      }}
+onClick={(e) => {
+  e.stopPropagation()
+
+  if (!isActive) {
+    setActiveId(item.id)
+    playExhibitAudio()
+  }
+}}
       onPointerDown={(e) => {
         if (!isActive) return
         e.stopPropagation()

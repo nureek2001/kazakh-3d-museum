@@ -699,7 +699,7 @@ export default function App() {
     const unlockAudio = async () => {
       if (!audioRef.current) return
       try {
-        audioRef.current.volume = 0.03
+        audioRef.current.volume = 0.3
         await audioRef.current.play()
         setAudioEnabled(true)
       } catch (error) {
@@ -724,7 +724,7 @@ export default function App() {
       setAudioEnabled(false)
     } else {
       try {
-        audioRef.current.volume = 0.03
+        audioRef.current.volume = 0.3
         await audioRef.current.play()
         setAudioEnabled(true)
       } catch (error) {
@@ -823,13 +823,20 @@ export default function App() {
         </button>
       </div>
 
-      <div className={topBarClass}>
-        <div className="topBarEyebrow">
-          {translatedEyebrowByLang[language] || dictionary.ui.eyebrow}
-        </div>
-        <div className="topBarTitle">{activeCategory.title}</div>
-        <div className="topBarSubtitle">{activeCategory.subtitle}</div>
-      </div>
+<div className={topBarClass}>
+  <div className="topBarEyebrow">
+    {translatedEyebrowByLang[language] || dictionary.ui.eyebrow}
+  </div>
+  <div className="topBarTitle">{activeCategory.title}</div>
+  <div className="topBarSubtitle">{activeCategory.subtitle}</div>
+
+  <div className="topBarUniversity">
+    <img src="/logo.png" alt="AOGU" className="topBarUniversityLogo" />
+    <div className="topBarUniversityText">
+      ATYRAU OIL AND GAS UNIVERSITY
+    </div>
+  </div>
+</div>
 
       <button
         className="sideArrow sideArrowLeft"
@@ -866,12 +873,6 @@ export default function App() {
         {audioEnabled ? dictionary.ui.soundOn : dictionary.ui.soundOff}
       </button>
 
-      <div className="universityFooter">
-        <img src="/logo.png" alt="AOGU" className="universityFooterLogo" />
-        <div className="universityFooterText">
-          ATYRAU OIL AND GAS UNIVERSITY
-        </div>
-      </div>
     </div>
   )
 }
