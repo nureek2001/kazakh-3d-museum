@@ -572,46 +572,49 @@ function Scene({
 
   return (
     <group ref={sceneRootRef}>
-      <fog attach="fog" args={['#120907', 14, 34]} />
+      <fog attach="fog" args={['#4a352d', 18, 42]} />
 
-      <ambientLight intensity={1.0} />
-      <hemisphereLight args={['#f3d6a2', '#1a0d0b', 1.15]} />
+<ambientLight intensity={1.75} />
+<hemisphereLight args={['#fbe2b8', '#5a3528', 1.9]} />
 
-      <directionalLight
-        position={[5, 8, 6]}
-        intensity={1.6}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
+<directionalLight
+  position={[6, 9, 7]}
+  intensity={2.1}
+  castShadow
+  shadow-mapSize-width={1024}
+  shadow-mapSize-height={1024}
+/>
 
-      <spotLight
-        position={[0, 7.2, 3.4]}
-        intensity={2.2}
-        angle={0.42}
-        penumbra={0.95}
-        distance={24}
-        decay={1.5}
-        color="#ffe0a8"
-      />
+<spotLight
+  position={[0, 8, 4.2]}
+  intensity={3.4}
+  angle={0.5}
+  penumbra={0.95}
+  distance={30}
+  decay={1.35}
+  color="#ffe8bd"
+/>
 
-      <spotLight
-        ref={activeSpotRef}
-        position={[0, 6.2, 3.4]}
-        intensity={activeId !== null ? 2.8 : 1.15}
-        angle={0.32}
-        penumbra={1}
-        distance={20}
-        decay={1.6}
-        color="#fff4de"
-        castShadow
-      />
+<spotLight
+  ref={activeSpotRef}
+  position={[0, 6.4, 3.6]}
+  intensity={activeId !== null ? 4.0 : 1.6}
+  angle={0.34}
+  penumbra={1}
+  distance={22}
+  decay={1.45}
+  color="#fff6e3"
+  castShadow
+/>
 
-      <object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
+<object3D ref={activeSpotTargetRef} position={[0, 0.72, 0]} />
 
-      <pointLight position={[-5.5, 3.6, 2]} intensity={0.7} color="#7f53cf" />
-      <pointLight position={[5.5, 3.6, 2]} intensity={0.85} color="#c98532" />
-      <pointLight position={[0, 3.8, -1.6]} intensity={0.8} color="#f4c56f" />
+<pointLight position={[-6, 4.2, 1.5]} intensity={1.1} color="#b18cff" />
+<pointLight position={[6, 4.2, 1.5]} intensity={1.25} color="#f0b35d" />
+<pointLight position={[0, 4.4, -1.5]} intensity={1.4} color="#ffd27d" />
+
+<pointLight position={[-3.5, 1.4, 2.4]} intensity={0.7} color="#ffcf8a" />
+<pointLight position={[3.5, 1.4, 2.4]} intensity={0.7} color="#ffcf8a" />
 
       <SceneDecor />
       <FloatingDust />

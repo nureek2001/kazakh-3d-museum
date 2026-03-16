@@ -15,10 +15,10 @@ body {
   overflow: hidden;
   font-family: Georgia, 'Times New Roman', serif;
   background:
-    radial-gradient(circle at 50% 14%, rgba(246, 202, 112, 0.16), transparent 28%),
-    radial-gradient(circle at 18% 48%, rgba(126, 82, 186, 0.1), transparent 30%),
-    radial-gradient(circle at 82% 54%, rgba(211, 142, 64, 0.11), transparent 28%),
-    linear-gradient(180deg, #120807 0%, #17100d 52%, #0f0807 100%);
+    radial-gradient(circle at 50% 14%, rgba(255, 210, 120, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 48%, rgba(132, 88, 190, 0.11), transparent 30%),
+    radial-gradient(circle at 82% 54%, rgba(214, 145, 68, 0.13), transparent 28%),
+    linear-gradient(180deg, #22120e 0%, #2a1812 52%, #180d0b 100%);
 }
 
 .appShell {
@@ -48,13 +48,13 @@ canvas {
 .bgAuraLeft {
   left: -8vw;
   transform: translateY(-50%);
-  background: rgba(118, 67, 181, 0.34);
+  background: rgba(138, 94, 210, 0.4);
 }
 
 .bgAuraRight {
   right: -8vw;
   transform: translateY(-50%);
-  background: rgba(214, 154, 78, 0.34);
+  background: rgba(224, 160, 74, 0.38);
 }
 
 .topFade {
